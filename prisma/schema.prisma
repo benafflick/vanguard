@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Shipment {
+  id                String   @id @default(cuid())
+  trackingNumber    String   @unique
+  shipmentType      String
+  weight            Float
+  status            String
+  origin            String
+  destination       String
+  currentLocation   String
+  estimatedDelivery DateTime
+  progress          Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  trackingEvents TrackingEvent[]
+}
+
+model TrackingEvent {
+  id          String   @id @default(cuid())
+  shipmentId  String
+  title       String
+  location    String
+  description String?
+  timestamp   DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  shipment Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+}
