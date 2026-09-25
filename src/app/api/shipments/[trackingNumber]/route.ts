@@ -18,12 +18,13 @@ async function isAdminAuthenticated() {
 }
 
 /* ================================= */
-/* GET — PUBLIC TRACKING */
-/* ONLY ACTIVE SHIPMENTS */
+/* GET — SHIPMENT */
+/* PUBLIC: ACTIVE ONLY */
+/* ADMIN: ACTIVE + INACTIVE */
 /* ================================= */
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: RouteContext,
 ) {
   try {
@@ -32,10 +33,75 @@ export async function GET(
     const decodedTrackingNumber =
       decodeURIComponent(trackingNumber);
 
+    const url = new URL(request.url);
+
+    const adminRequest =
+      url.searchParams.get("admin") === "true";
+
+    /*
+     * ADMIN REQUEST
+     *
+     * Admin can retrieve both active and inactive
+     * shipments, but only when authenticated.
+     */
+    if (adminRequest) {
+      const authenticated =
+        await isAdminAuthenticated();
+
+      if (!authenticated) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Unauthorized.",
+          },
+          { status: 401 },
+        );
+      }
+
+      const shipment =
+        await prisma.shipment.findUnique({
+          where: {
+            trackingNumber:
+              decodedTrackingNumber,
+          },
+
+          include: {
+            trackingEvents: {
+              orderBy: {
+                timestamp: "desc",
+              },
+            },
+          },
+        });
+
+      if (!shipment) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Shipment not found.",
+          },
+          { status: 404 },
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        shipment,
+      });
+    }
+
+    /*
+     * PUBLIC REQUEST
+     *
+     * Customers can only retrieve shipments
+     * that are currently active.
+     */
     const shipment =
       await prisma.shipment.findFirst({
         where: {
-          trackingNumber: decodedTrackingNumber,
+          trackingNumber:
+            decodedTrackingNumber,
+
           isActive: true,
         },
 
@@ -81,7 +147,8 @@ export async function GET(
 }
 
 /* ================================= */
-/* PATCH — ADMIN */
+/* PATCH — UPDATE SHIPMENT */
+/* ADMIN ONLY */
 /* ================================= */
 
 export async function PATCH(
@@ -127,10 +194,11 @@ export async function PATCH(
       );
     }
 
-    /* --------------------------------- */
-    /* Activate / Deactivate */
-    /* --------------------------------- */
-
+    /*
+     * ACTIVATE / DEACTIVATE
+     *
+     * Keep this before normal shipment validation.
+     */
     if (
       typeof body.isActive === "boolean"
     ) {
@@ -165,9 +233,13 @@ export async function PATCH(
       });
     }
 
-    /* --------------------------------- */
-    /* Normal Shipment Update */
-    /* --------------------------------- */
+    /*
+     * NORMAL SHIPMENT UPDATE
+     */
+
+    const newTrackingNumber = String(
+      body.trackingNumber ?? "",
+    ).trim();
 
     const status = String(
       body.status ?? "",
@@ -184,6 +256,49 @@ export async function PATCH(
     const estimatedDelivery = String(
       body.estimatedDelivery ?? "",
     ).trim();
+
+    /*
+     * TRACKING NUMBER VALIDATION
+     */
+    if (!newTrackingNumber) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Tracking number is required.",
+        },
+        { status: 400 },
+      );
+    }
+
+    /*
+     * If the tracking number changed,
+     * make sure another shipment is not
+     * already using the new number.
+     */
+    if (
+      newTrackingNumber !==
+      existingShipment.trackingNumber
+    ) {
+      const duplicateShipment =
+        await prisma.shipment.findUnique({
+          where: {
+            trackingNumber:
+              newTrackingNumber,
+          },
+        });
+
+      if (duplicateShipment) {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              "That tracking number is already in use.",
+          },
+          { status: 409 },
+        );
+      }
+    }
 
     if (!status) {
       return NextResponse.json(
@@ -253,11 +368,12 @@ export async function PATCH(
     const shipment =
       await prisma.shipment.update({
         where: {
-          trackingNumber:
-            decodedTrackingNumber,
+          id: existingShipment.id,
         },
 
         data: {
+          trackingNumber:
+            newTrackingNumber,
           status,
           currentLocation,
           progress,
@@ -432,7 +548,8 @@ export async function POST(
 }
 
 /* ================================= */
-/* DELETE — ADMIN */
+/* DELETE — SHIPMENT */
+/* ADMIN ONLY */
 /* ================================= */
 
 export async function DELETE(

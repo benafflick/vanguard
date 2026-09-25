@@ -67,6 +67,7 @@ export default function ShipmentManagementPage({
 
   const [formData, setFormData] =
     useState({
+      trackingNumber: "",
       status: "",
       currentLocation: "",
       progress: "0",
@@ -148,6 +149,9 @@ export default function ShipmentManagementPage({
         );
 
         setFormData({
+          trackingNumber:
+            loadedShipment.trackingNumber,
+
           status:
             loadedShipment.status,
 
@@ -288,11 +292,29 @@ export default function ShipmentManagementPage({
   ) {
     event.preventDefault();
 
+    const newTrackingNumber =
+      formData.trackingNumber.trim();
+
+    if (!newTrackingNumber) {
+      setMessage(
+        "Please enter a tracking number.",
+      );
+      setMessageType("error");
+      return;
+    }
+
     setSaving(true);
     setMessage("");
     setMessageType("");
 
     try {
+      /*
+       * The request URL uses the CURRENT tracking
+       * number because that identifies the existing
+       * shipment.
+       *
+       * The body contains the NEW tracking number.
+       */
       const response = await fetch(
         `/api/shipments/${encodeURIComponent(
           trackingNumber,
@@ -306,6 +328,9 @@ export default function ShipmentManagementPage({
           },
 
           body: JSON.stringify({
+            trackingNumber:
+              newTrackingNumber,
+
             status:
               formData.status,
 
@@ -325,17 +350,26 @@ export default function ShipmentManagementPage({
       const text =
         await response.text();
 
-      const data = text
-        ? JSON.parse(text)
-        : {
-            success: false,
-            message:
-              "The server returned an empty response.",
-          };
+      let data: {
+        success?: boolean;
+        message?: string;
+        shipment?: Shipment;
+      } = {};
+
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch {
+          throw new Error(
+            "The server returned an invalid response.",
+          );
+        }
+      }
 
       if (
         !response.ok ||
-        !data.success
+        !data.success ||
+        !data.shipment
       ) {
         throw new Error(
           data.message ||
@@ -343,9 +377,43 @@ export default function ShipmentManagementPage({
         );
       }
 
+      const updatedShipment =
+        data.shipment;
+
+      const trackingNumberChanged =
+        updatedShipment.trackingNumber !==
+        trackingNumber;
+
       setShipment(
-        data.shipment,
+        updatedShipment,
       );
+
+      setTrackingNumber(
+        updatedShipment.trackingNumber,
+      );
+
+      setFormData((previous) => ({
+        ...previous,
+        trackingNumber:
+          updatedShipment.trackingNumber,
+      }));
+
+      /*
+       * If the tracking number changed,
+       * the current admin URL contains the
+       * OLD tracking number.
+       *
+       * Move the browser to the new URL so
+       * refreshing the page continues to work.
+       */
+      if (trackingNumberChanged) {
+        window.location.href =
+          `/admin/shipments/${encodeURIComponent(
+            updatedShipment.trackingNumber,
+          )}`;
+
+        return;
+      }
 
       setMessage(
         "Shipment updated successfully.",
@@ -726,9 +794,9 @@ export default function ShipmentManagementPage({
             </h2>
 
             <p className="mt-1 text-sm text-gray-500">
-              Update the current status
-              and location shown to the
-              customer.
+              Update the tracking number,
+              current status, location,
+              delivery date and progress.
             </p>
           </div>
 
@@ -736,6 +804,37 @@ export default function ShipmentManagementPage({
             onSubmit={saveShipment}
             className="grid gap-6 md:grid-cols-2"
           >
+            {/* Tracking Number */}
+
+            <div className="md:col-span-2">
+              <label
+                htmlFor="trackingNumber"
+                className="mb-2 block text-sm font-medium"
+              >
+                Tracking Number
+              </label>
+
+              <input
+                id="trackingNumber"
+                name="trackingNumber"
+                value={
+                  formData.trackingNumber
+                }
+                onChange={
+                  handleShipmentChange
+                }
+                required
+                autoComplete="off"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium outline-none focus:border-[#9a7626] focus:bg-white"
+              />
+
+              <p className="mt-2 text-xs text-gray-400">
+                Changing this will make
+                the old tracking number
+                stop working.
+              </p>
+            </div>
+
             {/* Status */}
 
             <div>
