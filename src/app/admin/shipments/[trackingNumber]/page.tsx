@@ -101,18 +101,10 @@ export default function ShipmentManagementPage({
 
         setTrackingNumber(number);
 
-        /*
-         * IMPORTANT:
-         *
-         * This uses the ADMIN endpoint.
-         * Therefore both active and inactive
-         * shipments can be opened here.
-         */
-
         const response = await fetch(
-          `/api/admin/shipments/${encodeURIComponent(
+          `/api/shipments/${encodeURIComponent(
             number,
-          )}`,
+          )}?admin=true`,
           {
             cache: "no-store",
           },
@@ -121,17 +113,26 @@ export default function ShipmentManagementPage({
         const text =
           await response.text();
 
-        const data = text
-          ? JSON.parse(text)
-          : {
-              success: false,
-              message:
-                "The server returned an empty response.",
-            };
+        let data: {
+          success?: boolean;
+          message?: string;
+          shipment?: Shipment;
+        } = {};
+
+        if (text) {
+          try {
+            data = JSON.parse(text);
+          } catch {
+            throw new Error(
+              "The server returned an invalid response.",
+            );
+          }
+        }
 
         if (
           !response.ok ||
-          !data.success
+          !data.success ||
+          !data.shipment
         ) {
           throw new Error(
             data.message ||
@@ -139,7 +140,7 @@ export default function ShipmentManagementPage({
           );
         }
 
-        const loadedShipment: Shipment =
+        const loadedShipment =
           data.shipment;
 
         setShipment(
@@ -292,11 +293,6 @@ export default function ShipmentManagementPage({
     setMessageType("");
 
     try {
-      /*
-       * PATCH remains on the protected
-       * shipment mutation endpoint.
-       */
-
       const response = await fetch(
         `/api/shipments/${encodeURIComponent(
           trackingNumber,
