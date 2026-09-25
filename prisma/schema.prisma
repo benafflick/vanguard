@@ -17,9 +17,9 @@ model Shipment {
   destination       String
   currentLocation   String
   estimatedDelivery DateTime
-  progress          Int      @default(0)
+    progress          Int      @default(0)
+  isActive          Boolean  @default(true)
   createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
 
   trackingEvents TrackingEvent[]
 }

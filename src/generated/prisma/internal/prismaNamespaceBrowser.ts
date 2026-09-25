@@ -82,8 +82,8 @@ export const ShipmentScalarFieldEnum = {
   currentLocation: 'currentLocation',
   estimatedDelivery: 'estimatedDelivery',
   progress: 'progress',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  isActive: 'isActive',
+  createdAt: 'createdAt'
 } as const
 
 export type ShipmentScalarFieldEnum = (typeof ShipmentScalarFieldEnum)[keyof typeof ShipmentScalarFieldEnum]

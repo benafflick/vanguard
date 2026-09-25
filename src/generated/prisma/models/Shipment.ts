@@ -47,8 +47,8 @@ export type ShipmentMinAggregateOutputType = {
   currentLocation: string | null
   estimatedDelivery: Date | null
   progress: number | null
+  isActive: boolean | null
   createdAt: Date | null
-  updatedAt: Date | null
 }
 
 export type ShipmentMaxAggregateOutputType = {
@@ -62,8 +62,8 @@ export type ShipmentMaxAggregateOutputType = {
   currentLocation: string | null
   estimatedDelivery: Date | null
   progress: number | null
+  isActive: boolean | null
   createdAt: Date | null
-  updatedAt: Date | null
 }
 
 export type ShipmentCountAggregateOutputType = {
@@ -77,8 +77,8 @@ export type ShipmentCountAggregateOutputType = {
   currentLocation: number
   estimatedDelivery: number
   progress: number
+  isActive: number
   createdAt: number
-  updatedAt: number
   _all: number
 }
 
@@ -104,8 +104,8 @@ export type ShipmentMinAggregateInputType = {
   currentLocation?: true
   estimatedDelivery?: true
   progress?: true
+  isActive?: true
   createdAt?: true
-  updatedAt?: true
 }
 
 export type ShipmentMaxAggregateInputType = {
@@ -119,8 +119,8 @@ export type ShipmentMaxAggregateInputType = {
   currentLocation?: true
   estimatedDelivery?: true
   progress?: true
+  isActive?: true
   createdAt?: true
-  updatedAt?: true
 }
 
 export type ShipmentCountAggregateInputType = {
@@ -134,8 +134,8 @@ export type ShipmentCountAggregateInputType = {
   currentLocation?: true
   estimatedDelivery?: true
   progress?: true
+  isActive?: true
   createdAt?: true
-  updatedAt?: true
   _all?: true
 }
 
@@ -236,8 +236,8 @@ export type ShipmentGroupByOutputType = {
   currentLocation: string
   estimatedDelivery: Date
   progress: number
+  isActive: boolean
   createdAt: Date
-  updatedAt: Date
   _count: ShipmentCountAggregateOutputType | null
   _avg: ShipmentAvgAggregateOutputType | null
   _sum: ShipmentSumAggregateOutputType | null
@@ -274,8 +274,8 @@ export type ShipmentWhereInput = {
   currentLocation?: Prisma.StringFilter<"Shipment"> | string
   estimatedDelivery?: Prisma.DateTimeFilter<"Shipment"> | Date | string
   progress?: Prisma.IntFilter<"Shipment"> | number
+  isActive?: Prisma.BoolFilter<"Shipment"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Shipment"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Shipment"> | Date | string
   trackingEvents?: Prisma.TrackingEventListRelationFilter
 }
 
@@ -290,8 +290,8 @@ export type ShipmentOrderByWithRelationInput = {
   currentLocation?: Prisma.SortOrder
   estimatedDelivery?: Prisma.SortOrder
   progress?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   trackingEvents?: Prisma.TrackingEventOrderByRelationAggregateInput
 }
 
@@ -309,8 +309,8 @@ export type ShipmentWhereUniqueInput = Prisma.AtLeast<{
   currentLocation?: Prisma.StringFilter<"Shipment"> | string
   estimatedDelivery?: Prisma.DateTimeFilter<"Shipment"> | Date | string
   progress?: Prisma.IntFilter<"Shipment"> | number
+  isActive?: Prisma.BoolFilter<"Shipment"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Shipment"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Shipment"> | Date | string
   trackingEvents?: Prisma.TrackingEventListRelationFilter
 }, "id" | "trackingNumber">
 
@@ -325,8 +325,8 @@ export type ShipmentOrderByWithAggregationInput = {
   currentLocation?: Prisma.SortOrder
   estimatedDelivery?: Prisma.SortOrder
   progress?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   _count?: Prisma.ShipmentCountOrderByAggregateInput
   _avg?: Prisma.ShipmentAvgOrderByAggregateInput
   _max?: Prisma.ShipmentMaxOrderByAggregateInput
@@ -348,8 +348,8 @@ export type ShipmentScalarWhereWithAggregatesInput = {
   currentLocation?: Prisma.StringWithAggregatesFilter<"Shipment"> | string
   estimatedDelivery?: Prisma.DateTimeWithAggregatesFilter<"Shipment"> | Date | string
   progress?: Prisma.IntWithAggregatesFilter<"Shipment"> | number
+  isActive?: Prisma.BoolWithAggregatesFilter<"Shipment"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Shipment"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Shipment"> | Date | string
 }
 
 export type ShipmentCreateInput = {
@@ -363,8 +363,8 @@ export type ShipmentCreateInput = {
   currentLocation: string
   estimatedDelivery: Date | string
   progress?: number
+  isActive?: boolean
   createdAt?: Date | string
-  updatedAt?: Date | string
   trackingEvents?: Prisma.TrackingEventCreateNestedManyWithoutShipmentInput
 }
 
@@ -379,8 +379,8 @@ export type ShipmentUncheckedCreateInput = {
   currentLocation: string
   estimatedDelivery: Date | string
   progress?: number
+  isActive?: boolean
   createdAt?: Date | string
-  updatedAt?: Date | string
   trackingEvents?: Prisma.TrackingEventUncheckedCreateNestedManyWithoutShipmentInput
 }
 
@@ -395,8 +395,8 @@ export type ShipmentUpdateInput = {
   currentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedDelivery?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   progress?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trackingEvents?: Prisma.TrackingEventUpdateManyWithoutShipmentNestedInput
 }
 
@@ -411,8 +411,8 @@ export type ShipmentUncheckedUpdateInput = {
   currentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedDelivery?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   progress?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trackingEvents?: Prisma.TrackingEventUncheckedUpdateManyWithoutShipmentNestedInput
 }
 
@@ -427,8 +427,8 @@ export type ShipmentCreateManyInput = {
   currentLocation: string
   estimatedDelivery: Date | string
   progress?: number
+  isActive?: boolean
   createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type ShipmentUpdateManyMutationInput = {
@@ -442,8 +442,8 @@ export type ShipmentUpdateManyMutationInput = {
   currentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedDelivery?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   progress?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ShipmentUncheckedUpdateManyInput = {
@@ -457,8 +457,8 @@ export type ShipmentUncheckedUpdateManyInput = {
   currentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedDelivery?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   progress?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ShipmentCountOrderByAggregateInput = {
@@ -472,8 +472,8 @@ export type ShipmentCountOrderByAggregateInput = {
   currentLocation?: Prisma.SortOrder
   estimatedDelivery?: Prisma.SortOrder
   progress?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type ShipmentAvgOrderByAggregateInput = {
@@ -492,8 +492,8 @@ export type ShipmentMaxOrderByAggregateInput = {
   currentLocation?: Prisma.SortOrder
   estimatedDelivery?: Prisma.SortOrder
   progress?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type ShipmentMinOrderByAggregateInput = {
@@ -507,8 +507,8 @@ export type ShipmentMinOrderByAggregateInput = {
   currentLocation?: Prisma.SortOrder
   estimatedDelivery?: Prisma.SortOrder
   progress?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type ShipmentSumOrderByAggregateInput = {
@@ -545,6 +545,10 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type ShipmentCreateNestedOneWithoutTrackingEventsInput = {
   create?: Prisma.XOR<Prisma.ShipmentCreateWithoutTrackingEventsInput, Prisma.ShipmentUncheckedCreateWithoutTrackingEventsInput>
   connectOrCreate?: Prisma.ShipmentCreateOrConnectWithoutTrackingEventsInput
@@ -570,8 +574,8 @@ export type ShipmentCreateWithoutTrackingEventsInput = {
   currentLocation: string
   estimatedDelivery: Date | string
   progress?: number
+  isActive?: boolean
   createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type ShipmentUncheckedCreateWithoutTrackingEventsInput = {
@@ -585,8 +589,8 @@ export type ShipmentUncheckedCreateWithoutTrackingEventsInput = {
   currentLocation: string
   estimatedDelivery: Date | string
   progress?: number
+  isActive?: boolean
   createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type ShipmentCreateOrConnectWithoutTrackingEventsInput = {
@@ -616,8 +620,8 @@ export type ShipmentUpdateWithoutTrackingEventsInput = {
   currentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedDelivery?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   progress?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ShipmentUncheckedUpdateWithoutTrackingEventsInput = {
@@ -631,8 +635,8 @@ export type ShipmentUncheckedUpdateWithoutTrackingEventsInput = {
   currentLocation?: Prisma.StringFieldUpdateOperationsInput | string
   estimatedDelivery?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   progress?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -677,8 +681,8 @@ export type ShipmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   currentLocation?: boolean
   estimatedDelivery?: boolean
   progress?: boolean
+  isActive?: boolean
   createdAt?: boolean
-  updatedAt?: boolean
   trackingEvents?: boolean | Prisma.Shipment$trackingEventsArgs<ExtArgs>
   _count?: boolean | Prisma.ShipmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["shipment"]>
@@ -694,8 +698,8 @@ export type ShipmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   currentLocation?: boolean
   estimatedDelivery?: boolean
   progress?: boolean
+  isActive?: boolean
   createdAt?: boolean
-  updatedAt?: boolean
 }, ExtArgs["result"]["shipment"]>
 
 export type ShipmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -709,8 +713,8 @@ export type ShipmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   currentLocation?: boolean
   estimatedDelivery?: boolean
   progress?: boolean
+  isActive?: boolean
   createdAt?: boolean
-  updatedAt?: boolean
 }, ExtArgs["result"]["shipment"]>
 
 export type ShipmentSelectScalar = {
@@ -724,11 +728,11 @@ export type ShipmentSelectScalar = {
   currentLocation?: boolean
   estimatedDelivery?: boolean
   progress?: boolean
+  isActive?: boolean
   createdAt?: boolean
-  updatedAt?: boolean
 }
 
-export type ShipmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "trackingNumber" | "shipmentType" | "weight" | "status" | "origin" | "destination" | "currentLocation" | "estimatedDelivery" | "progress" | "createdAt" | "updatedAt", ExtArgs["result"]["shipment"]>
+export type ShipmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "trackingNumber" | "shipmentType" | "weight" | "status" | "origin" | "destination" | "currentLocation" | "estimatedDelivery" | "progress" | "isActive" | "createdAt", ExtArgs["result"]["shipment"]>
 export type ShipmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trackingEvents?: boolean | Prisma.Shipment$trackingEventsArgs<ExtArgs>
   _count?: boolean | Prisma.ShipmentCountOutputTypeDefaultArgs<ExtArgs>
@@ -752,8 +756,8 @@ export type $ShipmentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     currentLocation: string
     estimatedDelivery: Date
     progress: number
+    isActive: boolean
     createdAt: Date
-    updatedAt: Date
   }, ExtArgs["result"]["shipment"]>
   composites: {}
 }
@@ -1188,8 +1192,8 @@ export interface ShipmentFieldRefs {
   readonly currentLocation: Prisma.FieldRef<"Shipment", 'String'>
   readonly estimatedDelivery: Prisma.FieldRef<"Shipment", 'DateTime'>
   readonly progress: Prisma.FieldRef<"Shipment", 'Int'>
+  readonly isActive: Prisma.FieldRef<"Shipment", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Shipment", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"Shipment", 'DateTime'>
 }
     
 

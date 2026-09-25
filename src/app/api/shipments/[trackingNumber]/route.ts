@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -7,9 +8,19 @@ type RouteContext = {
   }>;
 };
 
-/* -------------------------------- */
-/* GET — Get One Shipment */
-/* -------------------------------- */
+async function isAdminAuthenticated() {
+  const cookieStore = await cookies();
+
+  return (
+    cookieStore.get("vanguard_admin")?.value ===
+    "authenticated"
+  );
+}
+
+/* ================================= */
+/* GET — PUBLIC TRACKING */
+/* ONLY ACTIVE SHIPMENTS */
+/* ================================= */
 
 export async function GET(
   _request: Request,
@@ -22,11 +33,12 @@ export async function GET(
       decodeURIComponent(trackingNumber);
 
     const shipment =
-      await prisma.shipment.findUnique({
+      await prisma.shipment.findFirst({
         where: {
-          trackingNumber:
-            decodedTrackingNumber,
+          trackingNumber: decodedTrackingNumber,
+          isActive: true,
         },
+
         include: {
           trackingEvents: {
             orderBy: {
@@ -40,7 +52,8 @@ export async function GET(
       return NextResponse.json(
         {
           success: false,
-          message: "Shipment not found.",
+          message:
+            "We couldn't find a shipment with that tracking number.",
         },
         { status: 404 },
       );
@@ -67,21 +80,94 @@ export async function GET(
   }
 }
 
-/* -------------------------------- */
-/* PATCH — Update Shipment */
-/* -------------------------------- */
+/* ================================= */
+/* PATCH — ADMIN */
+/* ================================= */
 
 export async function PATCH(
   request: Request,
   { params }: RouteContext,
 ) {
   try {
+    const authenticated =
+      await isAdminAuthenticated();
+
+    if (!authenticated) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Unauthorized.",
+        },
+        { status: 401 },
+      );
+    }
+
     const { trackingNumber } = await params;
 
     const decodedTrackingNumber =
       decodeURIComponent(trackingNumber);
 
     const body = await request.json();
+
+    const existingShipment =
+      await prisma.shipment.findUnique({
+        where: {
+          trackingNumber:
+            decodedTrackingNumber,
+        },
+      });
+
+    if (!existingShipment) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Shipment not found.",
+        },
+        { status: 404 },
+      );
+    }
+
+    /* --------------------------------- */
+    /* Activate / Deactivate */
+    /* --------------------------------- */
+
+    if (
+      typeof body.isActive === "boolean"
+    ) {
+      const shipment =
+        await prisma.shipment.update({
+          where: {
+            trackingNumber:
+              decodedTrackingNumber,
+          },
+
+          data: {
+            isActive: body.isActive,
+          },
+
+          include: {
+            trackingEvents: {
+              orderBy: {
+                timestamp: "desc",
+              },
+            },
+          },
+        });
+
+      return NextResponse.json({
+        success: true,
+
+        message: body.isActive
+          ? "Shipment reactivated successfully."
+          : "Shipment deactivated successfully.",
+
+        shipment,
+      });
+    }
+
+    /* --------------------------------- */
+    /* Normal Shipment Update */
+    /* --------------------------------- */
 
     const status = String(
       body.status ?? "",
@@ -99,16 +185,11 @@ export async function PATCH(
       body.estimatedDelivery ?? "",
     ).trim();
 
-    /* ------------------------------ */
-    /* Validation */
-    /* ------------------------------ */
-
     if (!status) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "Status is required.",
+          message: "Status is required.",
         },
         { status: 400 },
       );
@@ -151,9 +232,8 @@ export async function PATCH(
       );
     }
 
-    const deliveryDate = new Date(
-      estimatedDelivery,
-    );
+    const deliveryDate =
+      new Date(estimatedDelivery);
 
     if (
       Number.isNaN(
@@ -169,32 +249,6 @@ export async function PATCH(
         { status: 400 },
       );
     }
-
-    /* ------------------------------ */
-    /* Find Shipment */
-    /* ------------------------------ */
-
-    const existingShipment =
-      await prisma.shipment.findUnique({
-        where: {
-          trackingNumber:
-            decodedTrackingNumber,
-        },
-      });
-
-    if (!existingShipment) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Shipment not found.",
-        },
-        { status: 404 },
-      );
-    }
-
-    /* ------------------------------ */
-    /* Update Shipment */
-    /* ------------------------------ */
 
     const shipment =
       await prisma.shipment.update({
@@ -243,15 +297,29 @@ export async function PATCH(
   }
 }
 
-/* -------------------------------- */
-/* POST — Add Tracking Event */
-/* -------------------------------- */
+/* ================================= */
+/* POST — ADD TRACKING EVENT */
+/* ADMIN ONLY */
+/* ================================= */
 
 export async function POST(
   request: Request,
   { params }: RouteContext,
 ) {
   try {
+    const authenticated =
+      await isAdminAuthenticated();
+
+    if (!authenticated) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Unauthorized.",
+        },
+        { status: 401 },
+      );
+    }
+
     const { trackingNumber } = await params;
 
     const decodedTrackingNumber =
@@ -271,12 +339,10 @@ export async function POST(
       body.description !== undefined &&
       body.description !== null &&
       String(body.description).trim()
-        ? String(body.description).trim()
+        ? String(
+            body.description,
+          ).trim()
         : null;
-
-    /* ------------------------------ */
-    /* Validation */
-    /* ------------------------------ */
 
     if (!title) {
       return NextResponse.json(
@@ -300,10 +366,6 @@ export async function POST(
       );
     }
 
-    /* ------------------------------ */
-    /* Find Shipment */
-    /* ------------------------------ */
-
     const shipment =
       await prisma.shipment.findUnique({
         where: {
@@ -322,10 +384,6 @@ export async function POST(
       );
     }
 
-    /* ------------------------------ */
-    /* Create Tracking Event */
-    /* ------------------------------ */
-
     await prisma.trackingEvent.create({
       data: {
         shipmentId: shipment.id,
@@ -334,10 +392,6 @@ export async function POST(
         description,
       },
     });
-
-    /* ------------------------------ */
-    /* Return Updated Shipment */
-    /* ------------------------------ */
 
     const updatedShipment =
       await prisma.shipment.findUnique({
@@ -371,6 +425,80 @@ export async function POST(
         success: false,
         message:
           "Unable to add tracking event.",
+      },
+      { status: 500 },
+    );
+  }
+}
+
+/* ================================= */
+/* DELETE — ADMIN */
+/* ================================= */
+
+export async function DELETE(
+  _request: Request,
+  { params }: RouteContext,
+) {
+  try {
+    const authenticated =
+      await isAdminAuthenticated();
+
+    if (!authenticated) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Unauthorized.",
+        },
+        { status: 401 },
+      );
+    }
+
+    const { trackingNumber } = await params;
+
+    const decodedTrackingNumber =
+      decodeURIComponent(trackingNumber);
+
+    const existingShipment =
+      await prisma.shipment.findUnique({
+        where: {
+          trackingNumber:
+            decodedTrackingNumber,
+        },
+      });
+
+    if (!existingShipment) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Shipment not found.",
+        },
+        { status: 404 },
+      );
+    }
+
+    await prisma.shipment.delete({
+      where: {
+        trackingNumber:
+          decodedTrackingNumber,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message:
+        "Shipment permanently deleted.",
+    });
+  } catch (error) {
+    console.error(
+      "DELETE SHIPMENT ERROR:",
+      error,
+    );
+
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          "Unable to delete shipment.",
       },
       { status: 500 },
     );
