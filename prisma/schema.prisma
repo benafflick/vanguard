@@ -22,6 +22,7 @@ model Shipment {
   createdAt         DateTime @default(now())
 
   trackingEvents TrackingEvent[]
+  destinationImages DestinationImage[]
 }
 
 model TrackingEvent {
@@ -34,4 +35,15 @@ model TrackingEvent {
   createdAt   DateTime @default(now())
 
   shipment Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+}
+model DestinationImage {
+  id         String   @id @default(cuid())
+  shipmentId String
+  imageData  Bytes
+  mimeType   String
+  createdAt  DateTime @default(now())
+
+  shipment Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  @@index([shipmentId])
 }

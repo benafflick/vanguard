@@ -10,4 +10,5 @@
  */
 export type * from './models/Shipment'
 export type * from './models/TrackingEvent'
+export type * from './models/DestinationImage'
 export type * from './commonInputTypes'

@@ -1,6 +1,8 @@
+
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import DestinationImages from "@/components/DestinationImages";
 
 type TrackingEvent = {
   id: string;
@@ -35,7 +37,7 @@ export default function TrackPage() {
 
     if (tracking) {
       setTrackingNumber(tracking);
-      loadShipment(tracking);
+      void loadShipment(tracking);
     }
   }, []);
 
@@ -55,9 +57,7 @@ export default function TrackPage() {
     try {
       const response = await fetch(
         `/api/shipments/${encodeURIComponent(trimmedValue)}`,
-        {
-          cache: "no-store",
-        },
+        { cache: "no-store" }
       );
 
       const text = await response.text();
@@ -73,7 +73,7 @@ export default function TrackPage() {
           data = JSON.parse(text);
         } catch {
           throw new Error(
-            "The server returned an invalid response.",
+            "The server returned an invalid response."
           );
         }
       }
@@ -81,25 +81,23 @@ export default function TrackPage() {
       if (!response.ok || !data.success || !data.shipment) {
         throw new Error(
           data.message ||
-            "We couldn't find a shipment with that tracking number.",
+            "We couldn't find a shipment with that tracking number."
         );
       }
 
       setShipment(data.shipment);
 
-      // Keep the URL shareable/bookmarkable.
-      const newUrl = `/track?tracking=${encodeURIComponent(
-        trimmedValue,
-      )}`;
+      const newUrl =
+        `/track?tracking=${encodeURIComponent(trimmedValue)}`;
 
       window.history.replaceState({}, "", newUrl);
-    } catch (error) {
-      console.error("TRACKING ERROR:", error);
+    } catch (caught) {
+      console.error("TRACKING ERROR:", caught);
 
       setError(
-        error instanceof Error
-          ? error.message
-          : "Unable to retrieve shipment information. Please try again.",
+        caught instanceof Error
+          ? caught.message
+          : "Unable to retrieve shipment information. Please try again."
       );
 
       setShipment(null);
@@ -109,10 +107,9 @@ export default function TrackPage() {
   }
 
   async function handleSubmit(
-    event: FormEvent<HTMLFormElement>,
+    event: FormEvent<HTMLFormElement>
   ) {
     event.preventDefault();
-
     await loadShipment(trackingNumber);
   }
 
@@ -147,20 +144,16 @@ export default function TrackPage() {
   }
 
   function getProgress() {
-    if (!shipment) {
-      return 0;
-    }
+    if (!shipment) return 0;
 
     return Math.min(
       Math.max(Number(shipment.progress) || 0, 0),
-      100,
+      100
     );
   }
 
   function getStatusClasses() {
-    if (!shipment) {
-      return "";
-    }
+    if (!shipment) return "";
 
     const status = shipment.status.toLowerCase();
 
@@ -172,10 +165,7 @@ export default function TrackPage() {
       return "border-blue-200 bg-blue-50 text-blue-700";
     }
 
-    if (
-      status === "processing" ||
-      status === "at facility"
-    ) {
+    if (status === "processing" || status === "at facility") {
       return "border-amber-200 bg-amber-50 text-amber-700";
     }
 
@@ -188,7 +178,6 @@ export default function TrackPage() {
 
   return (
     <main className="min-h-screen bg-[#f7f7f5] text-[#111]">
-      {/* Header */}
       <header className="border-b border-black/10 bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
           <a
@@ -219,7 +208,6 @@ export default function TrackPage() {
         </div>
       </header>
 
-      {/* Search */}
       <section className="border-b border-black/10 bg-white">
         <div className="mx-auto max-w-4xl px-6 py-16 text-center sm:py-20">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#9a7626]">
@@ -272,10 +260,8 @@ export default function TrackPage() {
         </div>
       </section>
 
-      {/* Shipment Result */}
       {shipment && (
         <section className="mx-auto max-w-6xl px-6 py-12 sm:py-16">
-          {/* Shipment Header */}
           <div className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
               <div>
@@ -299,7 +285,6 @@ export default function TrackPage() {
               </div>
             </div>
 
-            {/* Stats */}
             <div className="mt-8 grid gap-4 border-t border-black/10 pt-8 sm:grid-cols-2 lg:grid-cols-4">
               <div>
                 <p className="text-xs uppercase tracking-wider text-gray-400">
@@ -327,9 +312,7 @@ export default function TrackPage() {
                 </p>
 
                 <p className="mt-2 text-lg font-semibold">
-                  {formatDate(
-                    shipment.estimatedDelivery,
-                  )}
+                  {formatDate(shipment.estimatedDelivery)}
                 </p>
               </div>
 
@@ -345,7 +328,6 @@ export default function TrackPage() {
             </div>
           </div>
 
-          {/* Route */}
           <div className="mt-6 rounded-2xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
             <div className="mb-7">
               <p className="text-xs uppercase tracking-[0.2em] text-gray-400">
@@ -371,9 +353,7 @@ export default function TrackPage() {
               <div className="hidden md:block">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-[#9a7626]" />
-
                   <div className="h-px w-24 bg-gray-300 lg:w-40" />
-
                   <span className="h-2 w-2 rounded-full bg-[#111]" />
                 </div>
               </div>
@@ -389,7 +369,6 @@ export default function TrackPage() {
               </div>
             </div>
 
-            {/* Current Location */}
             <div className="mt-8 rounded-xl bg-[#f7f7f5] p-5">
               <p className="text-xs uppercase tracking-wider text-gray-400">
                 Currently at
@@ -400,7 +379,6 @@ export default function TrackPage() {
               </p>
             </div>
 
-            {/* Progress Bar */}
             <div className="mt-8">
               <div className="mb-3 flex items-center justify-between text-xs">
                 <span className="text-gray-500">
@@ -426,7 +404,11 @@ export default function TrackPage() {
             </div>
           </div>
 
-          {/* Tracking Timeline */}
+          <DestinationImages
+            trackingNumber={shipment.trackingNumber}
+            destination={shipment.destination}
+          />
+
           <div className="mt-6 rounded-2xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
             <div className="mb-8">
               <p className="text-xs uppercase tracking-[0.2em] text-gray-400">
@@ -452,11 +434,9 @@ export default function TrackPage() {
                       key={trackingEvent.id}
                       className="relative flex gap-5 pb-8 last:pb-0"
                     >
-                      {/* Timeline */}
                       <div className="relative flex w-5 shrink-0 justify-center">
                         {index !==
-                          shipment.trackingEvents.length -
-                            1 && (
+                          shipment.trackingEvents.length - 1 && (
                           <div className="absolute top-5 h-full w-px bg-gray-200" />
                         )}
 
@@ -469,7 +449,6 @@ export default function TrackPage() {
                         />
                       </div>
 
-                      {/* Event */}
                       <div className="flex-1">
                         <div className="flex flex-col justify-between gap-2 sm:flex-row">
                           <div>
@@ -484,7 +463,7 @@ export default function TrackPage() {
 
                           <p className="text-xs text-gray-400">
                             {formatDateTime(
-                              trackingEvent.timestamp,
+                              trackingEvent.timestamp
                             )}
                           </p>
                         </div>
@@ -496,13 +475,12 @@ export default function TrackPage() {
                         )}
                       </div>
                     </div>
-                  ),
+                  )
                 )}
               </div>
             )}
           </div>
 
-          {/* Security Notice */}
           <div className="mt-6 rounded-2xl border border-[#e5d8b7] bg-[#fbf7ed] p-6">
             <div className="flex gap-4">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#eadcb9] text-sm font-semibold text-[#76581c]">
@@ -525,7 +503,6 @@ export default function TrackPage() {
         </section>
       )}
 
-      {/* Empty State */}
       {!shipment && !loading && !error && (
         <section className="mx-auto max-w-3xl px-6 py-16 text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm">
@@ -538,12 +515,12 @@ export default function TrackPage() {
 
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
             Your shipment status, location, estimated delivery,
-            weight, and tracking history will appear here.
+            weight, destination photographs, and tracking
+            history will appear here.
           </p>
         </section>
       )}
 
-      {/* Footer */}
       <footer className="border-t border-black/10 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
           <p className="text-center text-xs text-gray-400">

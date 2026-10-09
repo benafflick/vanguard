@@ -398,7 +398,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Shipment: 'Shipment',
-  TrackingEvent: 'TrackingEvent'
+  TrackingEvent: 'TrackingEvent',
+  DestinationImage: 'DestinationImage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "shipment" | "trackingEvent"
+    modelProps: "shipment" | "trackingEvent" | "destinationImage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -566,6 +567,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DestinationImage: {
+      payload: Prisma.$DestinationImagePayload<ExtArgs>
+      fields: Prisma.DestinationImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DestinationImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DestinationImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DestinationImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DestinationImagePayload>
+        }
+        findFirst: {
+          args: Prisma.DestinationImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DestinationImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DestinationImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DestinationImagePayload>
+        }
+        findMany: {
+          args: Prisma.DestinationImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DestinationImagePayload>[]
+        }
+        create: {
+          args: Prisma.DestinationImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DestinationImagePayload>
+        }
+        createMany: {
+          args: Prisma.DestinationImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DestinationImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DestinationImagePayload>[]
+        }
+        delete: {
+          args: Prisma.DestinationImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DestinationImagePayload>
+        }
+        update: {
+          args: Prisma.DestinationImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DestinationImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.DestinationImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DestinationImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DestinationImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DestinationImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.DestinationImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DestinationImagePayload>
+        }
+        aggregate: {
+          args: Prisma.DestinationImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDestinationImage>
+        }
+        groupBy: {
+          args: Prisma.DestinationImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DestinationImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DestinationImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DestinationImageCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -634,6 +709,17 @@ export const TrackingEventScalarFieldEnum = {
 } as const
 
 export type TrackingEventScalarFieldEnum = (typeof TrackingEventScalarFieldEnum)[keyof typeof TrackingEventScalarFieldEnum]
+
+
+export const DestinationImageScalarFieldEnum = {
+  id: 'id',
+  shipmentId: 'shipmentId',
+  imageData: 'imageData',
+  mimeType: 'mimeType',
+  createdAt: 'createdAt'
+} as const
+
+export type DestinationImageScalarFieldEnum = (typeof DestinationImageScalarFieldEnum)[keyof typeof DestinationImageScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -726,6 +812,20 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'Bytes'
+ */
+export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
+    
+
+
+/**
+ * Reference to a field of type 'Bytes[]'
+ */
+export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
     
 
 /**
@@ -881,6 +981,7 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   shipment?: Prisma.ShipmentOmit
   trackingEvent?: Prisma.TrackingEventOmit
+  destinationImage?: Prisma.DestinationImageOmit
 }
 
 /* Types for Logging */

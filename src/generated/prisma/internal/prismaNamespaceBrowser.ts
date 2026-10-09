@@ -52,7 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Shipment: 'Shipment',
-  TrackingEvent: 'TrackingEvent'
+  TrackingEvent: 'TrackingEvent',
+  DestinationImage: 'DestinationImage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -100,6 +101,17 @@ export const TrackingEventScalarFieldEnum = {
 } as const
 
 export type TrackingEventScalarFieldEnum = (typeof TrackingEventScalarFieldEnum)[keyof typeof TrackingEventScalarFieldEnum]
+
+
+export const DestinationImageScalarFieldEnum = {
+  id: 'id',
+  shipmentId: 'shipmentId',
+  imageData: 'imageData',
+  mimeType: 'mimeType',
+  createdAt: 'createdAt'
+} as const
+
+export type DestinationImageScalarFieldEnum = (typeof DestinationImageScalarFieldEnum)[keyof typeof DestinationImageScalarFieldEnum]
 
 
 export const SortOrder = {

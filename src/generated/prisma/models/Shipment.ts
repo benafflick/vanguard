@@ -277,6 +277,7 @@ export type ShipmentWhereInput = {
   isActive?: Prisma.BoolFilter<"Shipment"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Shipment"> | Date | string
   trackingEvents?: Prisma.TrackingEventListRelationFilter
+  destinationImages?: Prisma.DestinationImageListRelationFilter
 }
 
 export type ShipmentOrderByWithRelationInput = {
@@ -293,6 +294,7 @@ export type ShipmentOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   trackingEvents?: Prisma.TrackingEventOrderByRelationAggregateInput
+  destinationImages?: Prisma.DestinationImageOrderByRelationAggregateInput
 }
 
 export type ShipmentWhereUniqueInput = Prisma.AtLeast<{
@@ -312,6 +314,7 @@ export type ShipmentWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"Shipment"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Shipment"> | Date | string
   trackingEvents?: Prisma.TrackingEventListRelationFilter
+  destinationImages?: Prisma.DestinationImageListRelationFilter
 }, "id" | "trackingNumber">
 
 export type ShipmentOrderByWithAggregationInput = {
@@ -366,6 +369,7 @@ export type ShipmentCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   trackingEvents?: Prisma.TrackingEventCreateNestedManyWithoutShipmentInput
+  destinationImages?: Prisma.DestinationImageCreateNestedManyWithoutShipmentInput
 }
 
 export type ShipmentUncheckedCreateInput = {
@@ -382,6 +386,7 @@ export type ShipmentUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   trackingEvents?: Prisma.TrackingEventUncheckedCreateNestedManyWithoutShipmentInput
+  destinationImages?: Prisma.DestinationImageUncheckedCreateNestedManyWithoutShipmentInput
 }
 
 export type ShipmentUpdateInput = {
@@ -398,6 +403,7 @@ export type ShipmentUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trackingEvents?: Prisma.TrackingEventUpdateManyWithoutShipmentNestedInput
+  destinationImages?: Prisma.DestinationImageUpdateManyWithoutShipmentNestedInput
 }
 
 export type ShipmentUncheckedUpdateInput = {
@@ -414,6 +420,7 @@ export type ShipmentUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trackingEvents?: Prisma.TrackingEventUncheckedUpdateManyWithoutShipmentNestedInput
+  destinationImages?: Prisma.DestinationImageUncheckedUpdateManyWithoutShipmentNestedInput
 }
 
 export type ShipmentCreateManyInput = {
@@ -563,6 +570,20 @@ export type ShipmentUpdateOneRequiredWithoutTrackingEventsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ShipmentUpdateToOneWithWhereWithoutTrackingEventsInput, Prisma.ShipmentUpdateWithoutTrackingEventsInput>, Prisma.ShipmentUncheckedUpdateWithoutTrackingEventsInput>
 }
 
+export type ShipmentCreateNestedOneWithoutDestinationImagesInput = {
+  create?: Prisma.XOR<Prisma.ShipmentCreateWithoutDestinationImagesInput, Prisma.ShipmentUncheckedCreateWithoutDestinationImagesInput>
+  connectOrCreate?: Prisma.ShipmentCreateOrConnectWithoutDestinationImagesInput
+  connect?: Prisma.ShipmentWhereUniqueInput
+}
+
+export type ShipmentUpdateOneRequiredWithoutDestinationImagesNestedInput = {
+  create?: Prisma.XOR<Prisma.ShipmentCreateWithoutDestinationImagesInput, Prisma.ShipmentUncheckedCreateWithoutDestinationImagesInput>
+  connectOrCreate?: Prisma.ShipmentCreateOrConnectWithoutDestinationImagesInput
+  upsert?: Prisma.ShipmentUpsertWithoutDestinationImagesInput
+  connect?: Prisma.ShipmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ShipmentUpdateToOneWithWhereWithoutDestinationImagesInput, Prisma.ShipmentUpdateWithoutDestinationImagesInput>, Prisma.ShipmentUncheckedUpdateWithoutDestinationImagesInput>
+}
+
 export type ShipmentCreateWithoutTrackingEventsInput = {
   id?: string
   trackingNumber: string
@@ -576,6 +597,7 @@ export type ShipmentCreateWithoutTrackingEventsInput = {
   progress?: number
   isActive?: boolean
   createdAt?: Date | string
+  destinationImages?: Prisma.DestinationImageCreateNestedManyWithoutShipmentInput
 }
 
 export type ShipmentUncheckedCreateWithoutTrackingEventsInput = {
@@ -591,6 +613,7 @@ export type ShipmentUncheckedCreateWithoutTrackingEventsInput = {
   progress?: number
   isActive?: boolean
   createdAt?: Date | string
+  destinationImages?: Prisma.DestinationImageUncheckedCreateNestedManyWithoutShipmentInput
 }
 
 export type ShipmentCreateOrConnectWithoutTrackingEventsInput = {
@@ -622,6 +645,7 @@ export type ShipmentUpdateWithoutTrackingEventsInput = {
   progress?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  destinationImages?: Prisma.DestinationImageUpdateManyWithoutShipmentNestedInput
 }
 
 export type ShipmentUncheckedUpdateWithoutTrackingEventsInput = {
@@ -637,6 +661,87 @@ export type ShipmentUncheckedUpdateWithoutTrackingEventsInput = {
   progress?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  destinationImages?: Prisma.DestinationImageUncheckedUpdateManyWithoutShipmentNestedInput
+}
+
+export type ShipmentCreateWithoutDestinationImagesInput = {
+  id?: string
+  trackingNumber: string
+  shipmentType: string
+  weight: number
+  status: string
+  origin: string
+  destination: string
+  currentLocation: string
+  estimatedDelivery: Date | string
+  progress?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  trackingEvents?: Prisma.TrackingEventCreateNestedManyWithoutShipmentInput
+}
+
+export type ShipmentUncheckedCreateWithoutDestinationImagesInput = {
+  id?: string
+  trackingNumber: string
+  shipmentType: string
+  weight: number
+  status: string
+  origin: string
+  destination: string
+  currentLocation: string
+  estimatedDelivery: Date | string
+  progress?: number
+  isActive?: boolean
+  createdAt?: Date | string
+  trackingEvents?: Prisma.TrackingEventUncheckedCreateNestedManyWithoutShipmentInput
+}
+
+export type ShipmentCreateOrConnectWithoutDestinationImagesInput = {
+  where: Prisma.ShipmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.ShipmentCreateWithoutDestinationImagesInput, Prisma.ShipmentUncheckedCreateWithoutDestinationImagesInput>
+}
+
+export type ShipmentUpsertWithoutDestinationImagesInput = {
+  update: Prisma.XOR<Prisma.ShipmentUpdateWithoutDestinationImagesInput, Prisma.ShipmentUncheckedUpdateWithoutDestinationImagesInput>
+  create: Prisma.XOR<Prisma.ShipmentCreateWithoutDestinationImagesInput, Prisma.ShipmentUncheckedCreateWithoutDestinationImagesInput>
+  where?: Prisma.ShipmentWhereInput
+}
+
+export type ShipmentUpdateToOneWithWhereWithoutDestinationImagesInput = {
+  where?: Prisma.ShipmentWhereInput
+  data: Prisma.XOR<Prisma.ShipmentUpdateWithoutDestinationImagesInput, Prisma.ShipmentUncheckedUpdateWithoutDestinationImagesInput>
+}
+
+export type ShipmentUpdateWithoutDestinationImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  trackingNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  shipmentType?: Prisma.StringFieldUpdateOperationsInput | string
+  weight?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  origin?: Prisma.StringFieldUpdateOperationsInput | string
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  currentLocation?: Prisma.StringFieldUpdateOperationsInput | string
+  estimatedDelivery?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  progress?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  trackingEvents?: Prisma.TrackingEventUpdateManyWithoutShipmentNestedInput
+}
+
+export type ShipmentUncheckedUpdateWithoutDestinationImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  trackingNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  shipmentType?: Prisma.StringFieldUpdateOperationsInput | string
+  weight?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  origin?: Prisma.StringFieldUpdateOperationsInput | string
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  currentLocation?: Prisma.StringFieldUpdateOperationsInput | string
+  estimatedDelivery?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  progress?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  trackingEvents?: Prisma.TrackingEventUncheckedUpdateManyWithoutShipmentNestedInput
 }
 
 
@@ -646,10 +751,12 @@ export type ShipmentUncheckedUpdateWithoutTrackingEventsInput = {
 
 export type ShipmentCountOutputType = {
   trackingEvents: number
+  destinationImages: number
 }
 
 export type ShipmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trackingEvents?: boolean | ShipmentCountOutputTypeCountTrackingEventsArgs
+  destinationImages?: boolean | ShipmentCountOutputTypeCountDestinationImagesArgs
 }
 
 /**
@@ -669,6 +776,13 @@ export type ShipmentCountOutputTypeCountTrackingEventsArgs<ExtArgs extends runti
   where?: Prisma.TrackingEventWhereInput
 }
 
+/**
+ * ShipmentCountOutputType without action
+ */
+export type ShipmentCountOutputTypeCountDestinationImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DestinationImageWhereInput
+}
+
 
 export type ShipmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -684,6 +798,7 @@ export type ShipmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   isActive?: boolean
   createdAt?: boolean
   trackingEvents?: boolean | Prisma.Shipment$trackingEventsArgs<ExtArgs>
+  destinationImages?: boolean | Prisma.Shipment$destinationImagesArgs<ExtArgs>
   _count?: boolean | Prisma.ShipmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["shipment"]>
 
@@ -735,6 +850,7 @@ export type ShipmentSelectScalar = {
 export type ShipmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "trackingNumber" | "shipmentType" | "weight" | "status" | "origin" | "destination" | "currentLocation" | "estimatedDelivery" | "progress" | "isActive" | "createdAt", ExtArgs["result"]["shipment"]>
 export type ShipmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trackingEvents?: boolean | Prisma.Shipment$trackingEventsArgs<ExtArgs>
+  destinationImages?: boolean | Prisma.Shipment$destinationImagesArgs<ExtArgs>
   _count?: boolean | Prisma.ShipmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ShipmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -744,6 +860,7 @@ export type $ShipmentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "Shipment"
   objects: {
     trackingEvents: Prisma.$TrackingEventPayload<ExtArgs>[]
+    destinationImages: Prisma.$DestinationImagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1153,6 +1270,7 @@ readonly fields: ShipmentFieldRefs;
 export interface Prisma__ShipmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   trackingEvents<T extends Prisma.Shipment$trackingEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Shipment$trackingEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  destinationImages<T extends Prisma.Shipment$destinationImagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Shipment$destinationImagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DestinationImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1608,6 +1726,30 @@ export type Shipment$trackingEventsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.TrackingEventScalarFieldEnum | Prisma.TrackingEventScalarFieldEnum[]
+}
+
+/**
+ * Shipment.destinationImages
+ */
+export type Shipment$destinationImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DestinationImage
+   */
+  select?: Prisma.DestinationImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DestinationImage
+   */
+  omit?: Prisma.DestinationImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DestinationImageInclude<ExtArgs> | null
+  where?: Prisma.DestinationImageWhereInput
+  orderBy?: Prisma.DestinationImageOrderByWithRelationInput | Prisma.DestinationImageOrderByWithRelationInput[]
+  cursor?: Prisma.DestinationImageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DestinationImageScalarFieldEnum | Prisma.DestinationImageScalarFieldEnum[]
 }
 
 /**

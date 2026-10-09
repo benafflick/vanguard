@@ -51,3 +51,8 @@ export type Shipment = Prisma.ShipmentModel
  * 
  */
 export type TrackingEvent = Prisma.TrackingEventModel
+/**
+ * Model DestinationImage
+ * 
+ */
+export type DestinationImage = Prisma.DestinationImageModel
